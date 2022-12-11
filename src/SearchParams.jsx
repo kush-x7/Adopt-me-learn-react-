@@ -10,7 +10,7 @@ const SearchParams = () => {
   const [pets, setPets] = useState([]);
 
   // For Local Caching we are doing this
-  const breeds = useBreedList(animal);
+  const breeds = useBreedList(animal)[0]; //Because it's returning an array and a string [0];
 
   // So basically first we are calling useEffect so it fetch our data while calling a function
   // Secondly we are calling fetch Apis whenever we are hitting API's
@@ -28,22 +28,17 @@ const SearchParams = () => {
     const jsonData = await res.json();
     setPets(jsonData.pets); //object of pets which we are storing in an array
   }
-  console.log(pets);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     requestPets();
   };
 
-  const handelChange = (e) => {
-    const userAddedText = e.target.value;
-    setLocation(userAddedText);
-  };
-
   const handleAnimalChange = (e) => {
     setAnimal(e.target.value);
     setBreed(""); // empty the other box whenever selecting animal.
   };
+
   return (
     <div className="search-params">
       <form onSubmit={handleSubmit}>
@@ -52,7 +47,7 @@ const SearchParams = () => {
           <input
             id="location"
             value={location}
-            onChange={handelChange}
+            onChange={(e) => setLocation(e.target.value)}
             placeholder="Location"
           />
         </label>
@@ -66,9 +61,13 @@ const SearchParams = () => {
             onChange={handleAnimalChange}
           >
             {/* Setting empty option so by default select box will be empty */}
-            <option></option>
+            <option />
             {ANIMALS.map((animal) => {
-              return <option key={animal}>{animal}</option>;
+              return (
+                <option key={animal} value={animal}>
+                  {animal}
+                </option>
+              );
             })}
           </select>
         </label>
@@ -83,10 +82,10 @@ const SearchParams = () => {
             onChange={(e) => setBreed(e.target.value)}
           >
             {/* Setting empty option so by default select box will be empty */}
-            <option></option>
+            <option />
             {breeds.map((breed) => {
               return (
-                <option key={breed} value="breed">
+                <option key={breed} value={breed}>
                   {breed}
                 </option>
               );
@@ -98,12 +97,14 @@ const SearchParams = () => {
       </form>
 
       {pets.map((pet) => {
-        <Pet
-          key={pet.id}
-          name={pet.name}
-          animal={pet.animal}
-          breed={pet.breed}
-        />;
+        return (
+          <Pet
+            key={pet.id}
+            name={pet.name}
+            animal={pet.animal}
+            breed={pet.breed}
+          />
+        );
       })}
     </div>
   );
