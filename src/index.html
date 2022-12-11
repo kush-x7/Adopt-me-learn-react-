@@ -10,19 +10,6 @@
     <div id="root">not rendered</div>
     <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
-    <script>
-      // Let's react app
-      const App = () => {
-        return React.createElement(
-          "div", //Element name || Tag name
-          { id: "my-id" }, //Element attribute
-          React.createElement("h1", {}, "Adopt Me!") //Element  CHildren
-        );
-      };
-
-      const getRoot = document.getElementById("root");
-      const virtualRoot = ReactDOM.createRoot(getRoot);
-      virtualRoot.render(React.createElement(App));
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
