@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Pet from "./Pet";
+import Results from "./Results";
 import useBreedList from "./useBreedList";
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "rept"];
 
@@ -11,6 +11,7 @@ const SearchParams = () => {
 
   // For Local Caching we are doing this
   const breeds = useBreedList(animal)[0]; //Because it's returning an array and a string [0];
+  // const [breeds] = useBreedList(animal)
 
   // So basically first we are calling useEffect so it fetch our data while calling a function
   // Secondly we are calling fetch Apis whenever we are hitting API's
@@ -96,16 +97,7 @@ const SearchParams = () => {
         <button>Submit</button>
       </form>
 
-      {pets.map((pet) => {
-        return (
-          <Pet
-            key={pet.id}
-            name={pet.name}
-            animal={pet.animal}
-            breed={pet.breed}
-          />
-        );
-      })}
+      <Results pets={pets} />
     </div>
   );
 };
