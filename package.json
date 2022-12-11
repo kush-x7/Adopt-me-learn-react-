@@ -1,0 +1,16 @@
+{
+  "name": "adopt-me",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kush-x7/Adopt-me-learn-react-.git",
+  "author": "kushagra <kushagratripathi7@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-react": "2.1.0",
+    "vite": "3.1.4"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
