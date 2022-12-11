@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "eslint:recommended",
+    // Jo bhi eslint recommend us
+    "prettier"
+    // It will use our prettier styles
+    //Always remember to keep it at the last
+  ],
+  "plugins": [],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module", // I am doing import an export not common js stuff.
+    "ecmaFeatures": { "jsx": true }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true //don't give me error if I use node things like fetch in my react.
+  }
+}
