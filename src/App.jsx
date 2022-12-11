@@ -1,32 +1,18 @@
 import React from "react";
-import { createRoot } from "react-dom";
-import Pet from "./Pet";
+import { createRoot } from "react-dom/client";
+import SearchParams from "./SearchParams";
 
 const App = () => {
-  return React.createElement(
-    "div", //Element name || Tag name
-    { id: "my-id" }, //Element attribute
-    [
-      React.createElement("h1", {}, "Adopt Me!"),
-      React.createElement(Pet, {
-        animal: "kush",
-        name: "dhr",
-        breed: "dog",
-      }),
-      React.createElement(Pet, {
-        animal: "kush",
-        name: "dhr",
-        breed: "dog",
-      }),
-      React.createElement(Pet, {
-        animal: "kush",
-        name: "dhr",
-        breed: "dog",
-      }),
-    ] //Element  CHildren
+  return (
+    <React.StrictMode>
+      <div>
+        <h1>Adopt Me!</h1>
+        <SearchParams />
+      </div>
+    </React.StrictMode>
   );
 };
 
-const getRoot = document.getElementById("root");
-const virtualRoot = createRoot(getRoot);
-virtualRoot.render(React.createElement(App));
+const container = document.getElementById("root");
+const virtualRoot = createRoot(container);
+virtualRoot.render(<App />);
