@@ -1,104 +1,79 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Results from "./Results";
 import useBreedList from "./useBreedList";
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "rept"];
+import fetchSearch from "./fetchSearch";
+const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
-  const [location, setLocation] = useState("");
+  const [requestParams, setRequestParams] = useState({
+    location: "",
+    animal: "",
+    breed: "",
+  });
   const [animal, setAnimal] = useState("");
-  const [breed, setBreed] = useState("");
-  const [pets, setPets] = useState([]);
+  const [breeds] = useBreedList(animal);
 
-  // For Local Caching we are doing this
-  const breeds = useBreedList(animal)[0]; //Because it's returning an array and a string [0];
-  // const [breeds] = useBreedList(animal)
-
-  // So basically first we are calling useEffect so it fetch our data while calling a function
-  // Secondly we are calling fetch Apis whenever we are hitting API's
-
-  // To Load data initially
-  useEffect(() => {
-    requestPets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function requestPets() {
-    const res = await fetch(
-      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
-    );
-    const jsonData = await res.json();
-    setPets(jsonData.pets); //object of pets which we are storing in an array
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    requestPets();
-  };
-
-  const handleAnimalChange = (e) => {
-    setAnimal(e.target.value);
-    setBreed(""); // empty the other box whenever selecting animal.
-  };
+  const results = useQuery(["search", requestParams], fetchSearch);
+  const pets = results?.data?.pets ?? [];
 
   return (
     <div className="search-params">
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const obj = {
+            animal: formData.get("animal") ?? "",
+            breed: formData.get("breed") ?? "",
+            location: formData.get("location") ?? "",
+          };
+          setRequestParams(obj);
+        }}
+      >
         <label htmlFor="location">
           Location
-          <input
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Location"
-          />
+          <input id="location" name="location" placeholder="Location" />
         </label>
 
         <label htmlFor="animal">
           Animal
           <select
-            name="animal"
             id="animal"
-            value={animal}
-            onChange={handleAnimalChange}
+            name="animal"
+            onChange={(e) => {
+              setAnimal(e.target.value);
+            }}
+            onBlur={(e) => {
+              setAnimal(e.target.value);
+            }}
           >
-            {/* Setting empty option so by default select box will be empty */}
             <option />
-            {ANIMALS.map((animal) => {
-              return (
-                <option key={animal} value={animal}>
-                  {animal}
-                </option>
-              );
-            })}
+            {ANIMALS.map((animal) => (
+              <option key={animal} value={animal}>
+                {animal}
+              </option>
+            ))}
           </select>
         </label>
 
         <label htmlFor="breed">
           Breed
-          <select
-            name="breed"
-            id="breed"
-            disabled={breeds.length === 0}
-            value={breed}
-            onChange={(e) => setBreed(e.target.value)}
-          >
-            {/* Setting empty option so by default select box will be empty */}
+          <select disabled={!breeds.length} id="breed" name="breed">
             <option />
-            {breeds.map((breed) => {
-              return (
-                <option key={breed} value={breed}>
-                  {breed}
-                </option>
-              );
-            })}
+            {breeds.map((breed) => (
+              <option key={breed} value={breed}>
+                {breed}
+              </option>
+            ))}
           </select>
         </label>
 
         <button>Submit</button>
       </form>
-
       <Results pets={pets} />
     </div>
   );
 };
+
 export default SearchParams;
